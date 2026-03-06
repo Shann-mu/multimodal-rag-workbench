@@ -1,15 +1,37 @@
 services:
+  db:
+    build: ./db
+    environment:
+      POSTGRES_DB: rag_db
+      POSTGRES_USER: rag_user
+      POSTGRES_PASSWORD: rag_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag_user -d rag_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
 
   frontend:
-    image: node:20
+    image: node:20-alpine
     working_dir: /app
-    command: bash -lc "npm ci || npm install; npm run dev -- --host 0.0.0.0 --port 5173"
+    command: sh -lc "command -v npm >/dev/null 2>&1 || apk add --no-cache npm; npm ci || npm install; npm run dev -- --host 0.0.0.0 --port 5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -17,3 +39,6 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+
+volumes:
+  db_data:
