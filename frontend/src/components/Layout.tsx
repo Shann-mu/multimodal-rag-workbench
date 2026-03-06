@@ -167,8 +167,8 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
           />
         )}
       </Drawer>
-      <Content className="flex-1 overflow-hidden relative flex flex-col">
-        <div className="flex-1 w-full max-w-5xl mx-auto p-4 h-full flex flex-col min-h-0">
+      <Content className="flex-1 overflow-y-auto relative flex flex-col">
+        <div className="flex-1 w-full max-w-5xl mx-auto p-4 min-h-full flex flex-col">
           {children}
         </div>
       </Content>

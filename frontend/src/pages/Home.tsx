@@ -129,17 +129,12 @@ const Home: React.FC = () => {
 
   const openWithSelectedOrNew = async (path: string, titlePrefix: string) => {
     try {
-      if (selectedSessionId != null) {
-        openSession(path, selectedSessionId);
-        return;
-      }
-
+      // 总是进入新对话，而不是继续上次对话
       const createdId = await createNewSession(titlePrefix);
       if (createdId != null) {
         openSession(path, createdId);
         return;
       }
-
       navigate(path);
     } catch (e) {
       message.error(e instanceof Error ? e.message : String(e));
@@ -215,10 +210,7 @@ const Home: React.FC = () => {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)} size="small" className="md:hidden">
-                  历史
-                </Button>
-                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)} className="hidden md:flex">
+                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)} size="small">
                   历史
                 </Button>
                 <Button icon={<PlusOutlined />} onClick={handleNewSessionOnly} size="small">
