@@ -1,6 +1,6 @@
 services:
   db:
-    image: ankane/pgvector:pg16
+    build: ./db
     environment:
       POSTGRES_DB: rag_db
       POSTGRES_USER: rag_user
