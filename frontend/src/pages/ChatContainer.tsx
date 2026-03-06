@@ -242,27 +242,27 @@ const ChatContainer: FC<ChatContainerProps> = ({ title, type, fileAccept }) => {
 
   return (
     <Layout title={title}>
-      <div className="flex-1 flex gap-4 min-h-0">
+      <div className="flex-1 flex gap-2 md:gap-4 min-h-0 p-1 md:p-4">
         <div className="hidden md:block w-72 shrink-0">{sidebar}</div>
 
         <Drawer
           title="历史会话"
           placement="left"
-          width={320}
+          width={280}
           open={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
-          bodyStyle={{ padding: 0 }}
+          styles={{ body: { padding: 0 } }}
         >
           {sidebar}
         </Drawer>
 
-        <div className="flex-1 flex flex-col bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden min-h-0">
-          <div className="md:hidden px-3 py-2 border-b border-gray-200 bg-white flex justify-end">
+        <div className="flex-1 flex flex-col bg-white rounded-md md:rounded-lg shadow-sm border border-gray-200 overflow-hidden min-h-0">
+          <div className="md:hidden px-2 py-1.5 border-b border-gray-200 bg-white flex justify-end">
             {mobileHeaderActions}
           </div>
 
           {error && (
-            <Alert message="Error" description={error} type="error" showIcon closable className="m-2" />
+            <Alert message="Error" description={error} type="error" showIcon closable className="m-1 md:m-2" />
           )}
 
           <div className="flex-1 overflow-hidden min-h-0">
@@ -276,16 +276,17 @@ const ChatContainer: FC<ChatContainerProps> = ({ title, type, fileAccept }) => {
           </div>
 
           {/* 知识库工具栏 */}
-          <div className="px-4 py-2 border-t border-gray-100 bg-white">
-            <Space split={<Divider type="vertical" />} className="w-full justify-between overflow-x-auto flex-nowrap">
-              <Space>
+          <div className="px-2 md:px-4 py-1.5 md:py-2 border-t border-gray-100 bg-white shrink-0">
+            <div className="flex flex-col sm:flex-row gap-2 justify-between">
+              <div className="flex gap-1 md:gap-2 items-center overflow-x-auto no-scrollbar pb-1 sm:pb-0">
                 <Tooltip title="选择知识库">
                   <Select
                     prefix={<BookOutlined className="text-gray-400" />}
                     value={activeKbId}
                     onChange={setActiveKbId}
-                    placeholder="选择知识库"
-                    className="w-40"
+                    placeholder="知识库"
+                    className="w-32 md:w-40 shrink-0"
+                    size="small"
                     options={kbList.map(kb => ({ label: kb.name, value: kb.id }))}
                   />
                 </Tooltip>
@@ -297,15 +298,16 @@ const ChatContainer: FC<ChatContainerProps> = ({ title, type, fileAccept }) => {
                     value={selectedDocIds}
                     onChange={setSelectedDocIds}
                     placeholder="全部文档"
-                    className="min-w-[160px] max-w-[300px]"
+                    className="flex-1 min-w-[120px] md:max-w-[300px]"
+                    size="small"
                     maxTagCount="responsive"
                     options={docList.map(doc => ({ label: doc.filename, value: doc.id }))}
                     allowClear
                   />
                 </Tooltip>
-              </Space>
+              </div>
 
-              <Space>
+              <div className="flex gap-1 md:gap-2 shrink-0">
                 <Upload
                   beforeUpload={handleUploadDoc}
                   showUploadList={false}
@@ -315,24 +317,28 @@ const ChatContainer: FC<ChatContainerProps> = ({ title, type, fileAccept }) => {
                     icon={<UploadOutlined />} 
                     loading={isUploading}
                     disabled={!activeKbId}
+                    size="small"
+                    className="flex-1 sm:flex-none"
                   >
-                    上传文档
+                    上传
                   </Button>
                 </Upload>
                 
                 <Button 
                   icon={<PlusOutlined />} 
                   onClick={() => setIsKbModalOpen(true)}
+                  size="small"
+                  className="flex-1 sm:flex-none"
                 >
-                  新知识库
+                  新建
                 </Button>
-              </Space>
-            </Space>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-gray-50 border-t border-gray-200 p-2">
+          <div className="bg-gray-50 border-t border-gray-200 p-1 md:p-2 shrink-0">
             {type !== 'text' && fileAccept && (
-              <div className="px-4 pt-2">
+              <div className="px-2 md:px-4 pt-1 md:pt-2 pb-1 md:pb-2">
                 <FileUploader
                   accept={fileAccept}
                   onFileSelect={setSelectedFile}

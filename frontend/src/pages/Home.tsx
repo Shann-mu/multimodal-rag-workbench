@@ -163,10 +163,10 @@ const Home: React.FC = () => {
 
   return (
     <Layout title="Home">
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="text-center mb-12">
-          <Title level={1}>Multi-modal RAG System</Title>
-          <Paragraph className="text-lg text-gray-500">
+      <div className="flex flex-col items-center justify-center min-h-full py-6 px-4">
+        <div className="text-center mb-8 md:mb-12">
+          <Title level={1} className="text-2xl md:text-4xl">Multi-modal RAG System</Title>
+          <Paragraph className="text-base md:text-lg text-gray-500">
             Select a module to start your intelligent interaction journey
           </Paragraph>
         </div>
@@ -183,14 +183,14 @@ const Home: React.FC = () => {
             />
           )}
 
-          <Card className="border border-gray-200 shadow-sm">
+          <Card className="border border-gray-200 shadow-sm" bodyStyle={{ padding: '12px md:padding-24px' }}>
             <Drawer
               title="历史会话"
               placement="left"
-              width={320}
+              width={280}
               open={isDrawerOpen}
               onClose={() => setIsDrawerOpen(false)}
-              bodyStyle={{ padding: 0 }}
+              styles={{ body: { padding: 0 } }}
             >
               <SessionList
                 sessions={sessions}
@@ -204,40 +204,46 @@ const Home: React.FC = () => {
               />
             </Drawer>
 
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <Title level={4} style={{ margin: 0 }}>
                   快捷入口
                 </Title>
-                <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+                <Paragraph type="secondary" style={{ marginBottom: 0 }} className="text-xs md:text-sm">
                   继续你的默认会话或最近会话
                 </Paragraph>
               </div>
 
-              <div className="flex gap-2">
-                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)}>
+              <div className="flex flex-wrap gap-2">
+                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)} size="small" className="md:hidden">
                   历史
                 </Button>
-                <Button icon={<PlusOutlined />} onClick={handleNewSessionOnly}>
+                <Button icon={<UnorderedListOutlined />} onClick={() => setIsDrawerOpen(true)} className="hidden md:flex">
+                  历史
+                </Button>
+                <Button icon={<PlusOutlined />} onClick={handleNewSessionOnly} size="small">
                   新会话
                 </Button>
                 <Button
                   disabled={!defaultSession || isLoadingSessions}
                   onClick={() => defaultSession && openSession('/chat', defaultSession.id)}
+                  size="small"
+                  className="hidden sm:inline-flex"
                 >
-                  进入默认会话
+                  默认会话
                 </Button>
                 <Button
                   type="primary"
                   disabled={!recentSession || isLoadingSessions}
                   onClick={() => recentSession && openSession('/chat', recentSession.id)}
+                  size="small"
                 >
-                  继续最近会话
+                  继续最近
                 </Button>
               </div>
             </div>
 
-            <div className="mt-4 px-2">
+            <div className="mt-4 px-1 md:px-2">
               {isLoadingSessions ? (
                 <div className="py-6 flex justify-center">
                   <Spin />
@@ -248,18 +254,18 @@ const Home: React.FC = () => {
                   dataSource={recentSessions}
                   renderItem={(item) => (
                     <List.Item
-                      className="cursor-pointer"
-                      style={{ paddingInline: 16 }}
+                      className="cursor-pointer hover:bg-gray-50 transition-colors"
+                      style={{ paddingInline: 8, md: 16 }}
                       onClick={() => openSession('/chat', item.id)}
                     >
-                      <div className="w-full flex items-center justify-between gap-3">
-                        <div className="truncate">
+                      <div className="w-full flex items-center justify-between gap-2">
+                        <div className="truncate flex-1">
                           <div className="text-sm font-medium truncate">{item.title}</div>
-                          <div className="text-xs text-gray-500 truncate">
-                            {item.is_default ? '默认会话' : item.mode} · {new Date(item.updated_at).toLocaleString()}
+                          <div className="text-[10px] md:text-xs text-gray-500 truncate">
+                            {item.is_default ? '默认' : item.mode} · {new Date(item.updated_at).toLocaleDateString()}
                           </div>
                         </div>
-                        <Button size="small">打开</Button>
+                        <Button size="small" type="link">打开</Button>
                       </div>
                     </List.Item>
                   )}
@@ -271,23 +277,24 @@ const Home: React.FC = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-4xl">
           {modules.map((module) => (
             <Card
               key={module.path}
               hoverable
-              className="cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg"
+              className="cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md"
+              bodyStyle={{ padding: '16px' }}
               onClick={() => {
                 void openWithSelectedOrNew(module.path, module.title);
               }}
             >
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-gray-50 rounded-full">
-                  {module.icon}
+              <div className="flex items-center gap-4">
+                <div className="p-2 md:p-3 bg-gray-50 rounded-full shrink-0">
+                  {React.cloneElement(module.icon as React.ReactElement, { style: { fontSize: '24px' } })}
                 </div>
-                <div>
-                  <Title level={4} style={{ marginTop: 0 }}>{module.title}</Title>
-                  <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+                <div className="min-w-0">
+                  <Title level={5} style={{ margin: 0 }} className="truncate">{module.title}</Title>
+                  <Paragraph type="secondary" style={{ marginBottom: 0 }} className="text-xs md:text-sm truncate">
                     {module.description}
                   </Paragraph>
                 </div>

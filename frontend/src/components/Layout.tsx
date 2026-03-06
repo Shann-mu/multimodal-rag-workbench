@@ -72,31 +72,42 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   };
 
   return (
-    <AntLayout className="h-screen flex flex-col bg-gray-50">
+    <AntLayout className="h-screen flex flex-col bg-gray-50 overflow-hidden">
       <Header 
-        className="border-b px-6 flex items-center justify-between h-16 shadow-sm z-10"
+        className="border-b px-3 md:px-6 flex items-center justify-between h-14 md:h-16 shadow-sm z-10 shrink-0"
         style={{ background: '#fff' }}
       >
-        <div className="flex items-center gap-4">
-          <Avatar size={32} src={avatarSrc} />
+        <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
+          <Avatar size={28} src={avatarSrc} className="shrink-0" />
           {!isHome && (
             <Button
               icon={<HomeOutlined />}
               onClick={() => navigate('/')}
               type="text"
+              className="hidden sm:flex"
             >
               Back to Home
             </Button>
           )}
-          <Title level={4} style={{ margin: 0 }}>
+          <Title level={4} style={{ margin: 0 }} className="truncate text-sm md:text-lg">
             {title || 'Multi-modal RAG System'}
           </Title>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2 shrink-0">
           {hasAccessToken() && (
             <>
-              <Button icon={<BookOutlined />} onClick={openKbDrawer}>
+              <Button 
+                icon={<BookOutlined />} 
+                onClick={openKbDrawer}
+                size="small"
+                className="md:hidden"
+              />
+              <Button 
+                icon={<BookOutlined />} 
+                onClick={openKbDrawer}
+                className="hidden md:flex"
+              >
                 我的知识库
               </Button>
               <Button
@@ -105,8 +116,9 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                   clearAccessToken();
                   navigate('/login', { replace: true });
                 }}
+                size="small"
               >
-                Logout
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </>
           )}

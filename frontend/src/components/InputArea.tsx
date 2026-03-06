@@ -29,8 +29,8 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, placeholder }) 
   };
 
   return (
-    <div className="p-4 bg-white border-t border-gray-200">
-      <div className="flex gap-2 items-end">
+    <div className="p-2 md:p-4 bg-white border-t border-gray-200">
+      <div className="flex gap-1 md:gap-2 items-end">
         <TextArea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -38,7 +38,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, placeholder }) 
           placeholder={placeholder || "Type your message..."}
           autoSize={{ minRows: 1, maxRows: 6 }}
           disabled={disabled}
-          className="resize-none"
+          className="resize-none text-sm md:text-base"
         />
         <Button 
           type="primary" 
@@ -46,8 +46,9 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, placeholder }) 
           onClick={handleSend}
           disabled={!text.trim() || disabled}
           className="flex-shrink-0 mb-0.5"
+          size={window.innerWidth < 768 ? 'small' : 'middle'}
         >
-          Send
+          <span className="hidden sm:inline">Send</span>
         </Button>
       </div>
     </div>
